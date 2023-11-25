@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Divider, Avatar } from "@nextui-org/react";
 import { Bricolage_Grotesque } from "next/font/google";
+import { signOut } from "next-auth/react";
 import {
   School,
   ListChecks,
@@ -39,7 +40,7 @@ function StudentItems() {
         Marks Alloted
       </NavButton>
 
-      <NavButton className="mt-auto" color={'danger'}>
+      <NavButton className="mt-auto" color={'danger'} onClick={() => signOut()}>
         <LogOut size={20} />
         Sign Out
       </NavButton>

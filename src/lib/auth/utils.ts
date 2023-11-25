@@ -1,34 +1,88 @@
+import CredentialsProvider from "next-auth/providers/credentials";
 import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
 import { redirect } from "next/navigation";
+import client from "../db/utils";
 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: number
+    email: string
+    role: string
+  }
+}
 
+export type User = {
+  id: number;
+  email: string;
+  role: string;
+};
 declare module "next-auth" {
   interface Session {
-    user: DefaultSession["user"] & {
-      id: string;
-    };
+    user: {
+      id: number
+      email: string
+      role: string
+    }
+  }
+
+  interface User {
+    id: number
+    email: string
+    role: string
   }
 }
 
 export type AuthSession = {
   session: {
-    user: {
-      id: string;
-      email?: string;
-      role?: string;
-    };
+    user: User;
   } | null;
 };
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => {
-      session.user.id = user.id;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        if (typeof user.id !== "number") throw new Error("id should a number");
+
+        token.id = user.id;
+        token.email = user.email;
+        token.role = user.role;
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.role = token.role;
       return session;
     },
   },
+  session: {
+    strategy: "jwt",
+  },
   providers: [
+    CredentialsProvider({
+      name: "Login",
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
 
+        const { email, password } = credentials;
+        const user = await client.execute({
+          sql: "SELECT * FROM account WHERE email = ? AND passwordHash = ?",
+          args: [email, password],
+        });
+
+        if (!user) return null;
+
+        const userRows = user.rows as unknown as User[];
+
+        return { id: userRows[0].id, email: userRows[0].email, role: userRows[0].role };
+      },
+    })
   ],
 };
 
@@ -40,5 +94,6 @@ export const getUserAuth = async () => {
 
 export const checkAuth = async () => {
   const { session } = await getUserAuth();
+  console.log(session)
   if (!session) redirect("/api/auth/signin");
 };

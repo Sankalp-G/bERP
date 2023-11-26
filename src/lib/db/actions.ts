@@ -1,3 +1,4 @@
+import { Row } from "@libsql/client";
 import client from "./utils";
 
 export type User = {
@@ -30,8 +31,8 @@ export async function getProfile(user: User) {
   });
   if (!profile) return null;
 
-  const profileRows = profile.rows as unknown as User[];
+  const profileRows = profile.rows;
   if (profileRows.length == 0) return null;
 
-  return profileRows[0];
+  return profileRows[0] as Row;
 }

@@ -2,6 +2,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
 import { redirect } from "next/navigation";
 import client from "../db/utils";
+import { getUser } from "../db/actions";
 
 declare module "next-auth/jwt" {
   interface JWT {
@@ -71,16 +72,10 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         const { email, password } = credentials;
-        const user = await client.execute({
-          sql: "SELECT * FROM account WHERE email = ? AND passwordHash = ?",
-          args: [email, password],
-        });
 
-        if (!user) return null;
+        const user = getUser(email, password);
 
-        const userRows = user.rows as unknown as User[];
-
-        return { id: userRows[0].id, email: userRows[0].email, role: userRows[0].role };
+        return user;
       },
     })
   ],

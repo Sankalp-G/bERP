@@ -19,22 +19,23 @@ export default function SubjectCard({ name, tag, total, absent, present }: Props
             track: "stroke-gray-400/10",
             value: "text-2xl font-semibold text-gray-600",
           }}
-          value={80}
+          value={present / total * 100}
           strokeWidth={4}
           showValueLabel={true}
         />
         <div className="flex flex-col w-full gap-2">
           <div className="flex justify-between w-full">
             <h2 className="text-lg font-semibold">{name}</h2>
-            <Chip
+            {/* <Chip
               classNames={{
                 base: "border-1 border-gray/30",
                 content: "text-gray/90 text-sm font-semibold",
               }}
               variant="light"
+              size="sm"
             >
               {tag}
-            </Chip>
+            </Chip> */}
           </div>
 
           <Divider className="my-1" />

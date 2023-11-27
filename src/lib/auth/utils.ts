@@ -1,7 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
+import { getServerSession, NextAuthOptions } from "next-auth";
 import { redirect } from "next/navigation";
-import client from "../db/utils";
 import { getUser } from "../db/actions";
 
 declare module "next-auth/jwt" {

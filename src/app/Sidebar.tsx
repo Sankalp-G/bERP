@@ -16,7 +16,7 @@ import clsx from "clsx";
 import React from "react";
 import NavButton from "./NavButton";
 
-const bricolage = Bricolage_Grotesque({ subsets: ["latin"] });
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], display: 'swap', adjustFontFallback: false });
 
 const profile = {
   name: "John Doe",

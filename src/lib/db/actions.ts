@@ -1,5 +1,4 @@
-import { Row } from "@libsql/client";
-import client from "./utils";
+import db from "./utils";
 
 export type User = {
   id: number;
@@ -8,31 +7,35 @@ export type User = {
 };
 
 export async function getUser(email: string, password: string) {
-  const user = await client.execute({
-    sql: "SELECT * FROM account WHERE email = ? AND passwordHash = ?",
-    args: [email, password],
-  });
+  const user = await db.execute(
+    "SELECT * FROM account WHERE email = ? AND passwordHash = ?",
+    [email, password],
+  );
   if (!user) return null;
 
-  const userRows = user.rows as unknown as User[];
+  const userRows = user[0] as unknown as User[];
   if (userRows.length == 0) return null;
 
   return userRows[0];
 }
 
-export async function getProfile(user: User) {
-  const role = user.role == 'student' ? 'student' : user.role == 'teacher' ? 'teacher' : null;
+interface StudentProfile {
+  id: number
+  firstName: string
+  lastName: string
+  dob: Date
+  contactNo: string
+  email: string
+}
 
-  if (!role) return null;
-
-  const profile = await client.execute({
-    sql: `SELECT * FROM ${role} WHERE id = ?`,
-    args: [user.id],
-  });
+export async function getStudentProfile(id: number) {
+  const profile = await db.execute(`SELECT * FROM student WHERE id = ?`,
+    [id],
+  );
   if (!profile) return null;
 
-  const profileRows = profile.rows;
+  const profileRows = profile[0] as StudentProfile[];
   if (profileRows.length == 0) return null;
 
-  return profileRows[0] as Row;
+  return profileRows[0] as StudentProfile;
 }

@@ -1,16 +1,7 @@
 import { checkAuth, getUserAuth } from '@/lib/auth/utils';
-import { getProfile } from '@/lib/db/actions';
+import { getStudentProfile } from '@/lib/db/actions';
 import {Card, CardHeader, CardBody, Input} from "@nextui-org/react";
 import { DateTime } from 'luxon';
-
-interface StudentProfile {
-  id: number
-  firstName: string
-  lastName: string
-  dob: string
-  contactNo: string
-  email: string
-}
 
 function Field({ label, value }: { label: string, value: string | undefined }) {
   return (
@@ -29,10 +20,11 @@ export default async function Profile() {
 
   const { session } = await getUserAuth()
 
-  const profile = await getProfile(session!.user) as unknown as StudentProfile;
+  const profile = await getStudentProfile(session!.user.id);
 
-  function formatDate(date: string) {
-    return DateTime.fromISO(profile.dob.toString()).toLocaleString(DateTime.DATE_MED)
+  function formatedDate() {
+    if (!profile?.dob) return ''
+    return DateTime.fromJSDate(profile.dob).toLocaleString(DateTime.DATE_MED)
   }
 
   return (
@@ -45,7 +37,7 @@ export default async function Profile() {
           <Field label="Email" value={session?.user?.email} />
           <Field label="ID" value={profile?.id.toString()} />
           <Field label="Contact No" value={profile?.contactNo} />
-          <Field label="DOB" value={formatDate(profile.dob)} />
+          <Field label="DOB" value={formatedDate()} />
         </CardBody>
       </Card>
     </div>

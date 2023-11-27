@@ -1,8 +1,11 @@
-import { createClient } from "@libsql/client";
+import mysql from 'mysql2/promise';
 
-const client = createClient({
-  url: process.env.TURSO_URL!,
-  authToken: process.env.TURSO_TOKEN
+const db = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  password: process.env.MYSQL_PASS,
+  port: process.env.MYSQL_PORT ? parseInt(process.env.MYSQL_PORT) : 3306,
+  user: process.env.MYSQL_USER,
+  database: process.env.MYSQL_DB,
 });
 
-export default client;
+export default db;

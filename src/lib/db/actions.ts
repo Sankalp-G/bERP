@@ -151,3 +151,16 @@ export async function getTeacherCourses(teacherId: number) {
 
   return courses[0] as TeacherCourse[]
 }
+
+export async function getStudentsFromCourseId(courseID: number) {
+  const students = await db.execute(
+    `SELECT * FROM student s JOIN studentCourse sc
+     ON s.id = sc.studentID
+     WHERE sc.courseID = ?`
+    , [courseID]
+  )
+
+  if (!students) return null;
+
+  return students[0] as StudentProfile[]
+}

@@ -1,24 +1,19 @@
 import { getUserAuth } from "@/lib/auth/utils";
-import { getStudentMarks } from "@/lib/db/actions";
-import { Card, CardBody, Chip, Slider } from "@nextui-org/react";
-import MarkCard from "./MarkCard";
+import MarksPage from "@/app/marks/Student";
+import TeacherPage from "./Teacher";
 
-export default async function MarksPage() {
+export default async function Marks() {
   const { session } = await getUserAuth();
 
-  const marks = await getStudentMarks(session!.user.id);
+  if (session?.user.role == 'student') {
+    return (
+      <MarksPage session={session} />
+    )
+  }
 
-  console.log(marks);
-
-  return (
-    <main className="p-8">
-      <h1 className="text-2xl font-semibold pb-2">Marks allotted</h1>
-
-      <div className="grid grid-cols-2 gap-4">
-        {marks?.map((item, index) => (
-          <MarkCard key={index} name={item.courseName} tag={item.department} labMarks={item.labMarks} testMarks={item.testMarks} projectMarks={item.projectMarks} />
-        ))}
-      </div>
-    </main>
-  )
+  if (session?.user.role == 'teacher') {
+    return (
+      <TeacherPage session={session} />
+    )
+  }
 }

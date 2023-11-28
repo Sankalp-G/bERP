@@ -89,3 +89,24 @@ export async function getStudentOverallAttendance(studentId: number) {
 
   return attendanceRows[0]
 }
+
+interface Marks {
+  courseName: string
+  department: string
+  labMarks: number
+  testMarks: number
+  projectMarks: number
+}
+
+export async function getStudentMarks(studentId: number) {
+  const marks = await db.execute(
+    `SELECT c.courseName, c.department, m.labMarks, m.testMarks, m.projectMarks
+     FROM marks m JOIN course c ON m.courseID = c.id
+     WHERE m.studentID = ?`
+    , [studentId]
+  )
+
+  if (!marks) return null;
+
+  return marks[0] as Marks[]
+}

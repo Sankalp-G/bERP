@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Divider, Avatar } from "@nextui-org/react";
 import { Bricolage_Grotesque } from "next/font/google";
-import { signOut } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import {
   School,
   ListChecks,
@@ -48,7 +48,34 @@ function StudentItems() {
   )
 }
 
-export function Sidebar({ className }: { className: string }) {
+function TeacherItems() {
+  return (
+    <>
+      <h2 className="px-4 pt-3 text-xs font-semibold tracking-tight text-gray-500 uppercase">
+        Academics
+      </h2>
+
+      <NavButton to="/attendance">
+        <CalendarRange size={20} />
+        Add Attendance
+      </NavButton>
+
+      <NavButton to="/marks">
+        <ListChecks size={20} />
+        Set Marks
+      </NavButton>
+
+      <NavButton className="mt-auto" color={'danger'} onClick={() => signOut()}>
+        <LogOut size={20} />
+        Sign Out
+      </NavButton>
+    </>
+  )
+}
+
+export default function Sidebar({ className }: { className: string }) {
+  const { data: session } = useSession();
+
   return (
     <div className={cn("pb-12 border-r-2 border-[#E9EBEF]", className)}>
       <div className="space-y-4 pt-4 h-screen flex flex-col">
@@ -80,7 +107,8 @@ export function Sidebar({ className }: { className: string }) {
               Profile
             </NavButton>
 
-            <StudentItems />
+            {session?.user?.role === 'student' && <StudentItems />}
+            {session?.user?.role === 'teacher' && <TeacherItems />}
           </div>
         </div>
 

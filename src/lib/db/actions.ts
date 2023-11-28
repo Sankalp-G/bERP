@@ -19,7 +19,7 @@ export async function getUser(email: string, password: string) {
   return userRows[0];
 }
 
-interface StudentProfile {
+export interface StudentProfile {
   id: number
   firstName: string
   lastName: string
@@ -38,6 +38,27 @@ export async function getStudentProfile(id: number) {
   if (profileRows.length == 0) return null;
 
   return profileRows[0] as StudentProfile;
+}
+
+export interface TeacherProfile {
+  id: number
+  firstName: string
+  lastName: string
+  qualification: string
+  contactNo: string
+  email: string
+}
+
+export async function getTeacherProfile(id: number) {
+  const profile = await db.execute(`SELECT * FROM teacher WHERE id = ?`,
+    [id],
+  );
+  if (!profile) return null;
+
+  const profileRows = profile[0] as TeacherProfile[];
+  if (profileRows.length == 0) return null;
+
+  return profileRows[0] as TeacherProfile;
 }
 
 interface Attendance {

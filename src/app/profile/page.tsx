@@ -1,45 +1,28 @@
 import { checkAuth, getUserAuth } from '@/lib/auth/utils';
-import { getStudentProfile } from '@/lib/db/actions';
-import {Card, CardHeader, CardBody, Input} from "@nextui-org/react";
-import { DateTime } from 'luxon';
-
-function Field({ label, value }: { label: string, value: string | undefined }) {
-  return (
-    <Input
-      isReadOnly
-      label={label}
-      variant="bordered"
-      defaultValue={value}
-      className="max-w-xs"
-    />
-  )
-}
+import { getStudentProfile, getTeacherProfile } from '@/lib/db/actions';
+import StudentProfile from './Student';
+import TeacherProfile from './Teacher';
 
 export default async function Profile() {
   await checkAuth()
 
   const { session } = await getUserAuth()
 
-  const profile = await getStudentProfile(session!.user.id);
+  if (session?.user.role == 'student') {
+    const profile = await getStudentProfile(session.user.id)
+    if (!profile) return null
 
-  function formatedDate() {
-    if (!profile?.dob) return ''
-    return DateTime.fromJSDate(profile.dob).toLocaleString(DateTime.DATE_MED)
+    return (
+      <StudentProfile profile={profile} email={session.user.email} />
+    )
   }
 
-  return (
-    <div className='flex items-center justify-center h-full'>
-      <Card className='w-full max-w-xl p-2'>
-        <CardHeader>Profile</CardHeader>
-        <CardBody className='grid grid-cols-2 gap-4'>
-          <Field label="firstName" value={profile?.firstName} />
-          <Field label="lastName" value={profile?.lastName} />
-          <Field label="Email" value={session?.user?.email} />
-          <Field label="ID" value={profile?.id.toString()} />
-          <Field label="Contact No" value={profile?.contactNo} />
-          <Field label="DOB" value={formatedDate()} />
-        </CardBody>
-      </Card>
-    </div>
-  )
+  if (session?.user.role == 'teacher') {
+    const profile = await getTeacherProfile(session.user.id)
+    if (!profile) return null
+
+    return (
+      <TeacherProfile profile={profile} email={session.user.email} />
+    )
+  }
 }

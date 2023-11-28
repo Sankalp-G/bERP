@@ -131,3 +131,23 @@ export async function getStudentMarks(studentId: number) {
 
   return marks[0] as Marks[]
 }
+
+export interface TeacherCourse {
+  id: number
+  teacherId: number
+  department: string
+  courseName: string
+  credits: number
+  noOfHours: string
+}
+
+export async function getTeacherCourses(teacherId: number) {
+  const courses = await db.execute(
+    `SELECT * FROM course WHERE teacherID = ?`
+    , [teacherId]
+  )
+
+  if (!courses) return null;
+
+  return courses[0] as TeacherCourse[]
+}

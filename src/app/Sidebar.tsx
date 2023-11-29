@@ -18,11 +18,6 @@ import NavButton from "./NavButton";
 
 const bricolage = Bricolage_Grotesque({ subsets: ["latin"], display: 'swap', adjustFontFallback: false });
 
-const profile = {
-  name: "John Doe",
-  id: "1032220225",
-}
-
 function StudentItems() {
   return (
     <>
@@ -115,8 +110,8 @@ export default function Sidebar({ className }: { className: string }) {
         <div className="flex bg-[#EFF3F6] p-3" style={{ marginTop: "auto" }}>
           <Avatar size="sm" />
           <div className="flex flex-col ml-2">
-            <span className="text-xs font-semibold">{profile.name}</span>
-            <span className="text-xs text-gray-500">{profile.id}</span>
+            <span className="text-xs font-semibold">{session?.user.email}</span>
+            <span className="text-xs text-gray-500">{session?.user.role}</span>
           </div>
         </div>
       </div>

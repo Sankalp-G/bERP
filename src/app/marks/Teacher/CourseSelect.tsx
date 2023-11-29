@@ -58,7 +58,11 @@ export default function AttendanceSelect({ courses }: Props) {
         </Select>
       </div>
 
-      
+      {/* <div className="grid grid-cols-2 gap-4">
+        {marks?.map((item, index) => (
+          <MarkCard key={index} name={item.courseName} tag={item.department} labMarks={item.labMarks} testMarks={item.testMarks} projectMarks={item.projectMarks} />
+        ))}
+      </div> */}
     </main>
   );
 }

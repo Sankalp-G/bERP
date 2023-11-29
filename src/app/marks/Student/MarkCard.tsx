@@ -1,5 +1,8 @@
+'use client'
+
 import { Card, CardBody, Chip, Slider } from "@nextui-org/react";
 import MarkSlider from "./MarkSlider";
+import { useState } from "react";
 
 interface Props {
   name: string;
@@ -16,6 +19,12 @@ export default function MarkCard({
   labMarks,
   projectMarks,
 }: Props) {
+  const [marks, setMarks] = useState({
+    test: testMarks,
+    lab: labMarks,
+    project: projectMarks,
+  });
+
   return (
     <Card>
       <CardBody>
@@ -30,7 +39,8 @@ export default function MarkCard({
             aria-label="Test Marks"
             color="foreground"
             hideThumb={true}
-            value={testMarks}
+            value={marks.test}
+            onChange={(value) => setMarks({ ...marks, test: value })}
             minValue={0}
             maxValue={40}
             label="Class Test"
@@ -39,7 +49,8 @@ export default function MarkCard({
             aria-label="Lab Marks"
             color="foreground"
             hideThumb={true}
-            value={labMarks}
+            value={marks.lab}
+            onChange={(value) => setMarks({ ...marks, lab: value })}
             minValue={0}
             maxValue={40}
             label="Lab Practical"
@@ -48,7 +59,8 @@ export default function MarkCard({
             aria-label="Project Marks"
             color="primary"
             hideThumb={true}
-            value={projectMarks}
+            value={marks.project}
+            onChange={(value) => setMarks({ ...marks, project: value })}
             minValue={0}
             maxValue={20}
             label="Project"

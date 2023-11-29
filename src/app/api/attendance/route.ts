@@ -1,6 +1,11 @@
 import db from "@/lib/db/utils"
 import { NextRequest, NextResponse } from "next/server"
 
+interface StudentAttendance {
+  studentId: number
+  status: string
+}
+
 export async function POST(request: NextRequest) {
 
   const body = await request.json()
@@ -9,7 +14,7 @@ export async function POST(request: NextRequest) {
   const date = body.date
   const courseId = body.courseId
 
-  attendance.forEach(async (student) => {
+  attendance.forEach(async (student: StudentAttendance) => {
     const result = await db.execute(`
       INSERT INTO attendance VALUES (?, ?, ?, ?)
     `, [courseId, student.studentId, date, student.status])

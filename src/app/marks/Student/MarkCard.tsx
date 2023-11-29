@@ -40,6 +40,7 @@ export default function MarkCard({
             color="foreground"
             hideThumb={true}
             value={marks.test}
+            // @ts-expect-error
             onChange={(value) => setMarks({ ...marks, test: value })}
             minValue={0}
             maxValue={40}
@@ -50,6 +51,7 @@ export default function MarkCard({
             color="foreground"
             hideThumb={true}
             value={marks.lab}
+            // @ts-expect-error
             onChange={(value) => setMarks({ ...marks, lab: value })}
             minValue={0}
             maxValue={40}
@@ -60,6 +62,7 @@ export default function MarkCard({
             color="primary"
             hideThumb={true}
             value={marks.project}
+            // @ts-expect-error
             onChange={(value) => setMarks({ ...marks, project: value })}
             minValue={0}
             maxValue={20}

@@ -71,6 +71,7 @@ export default function AttendanceSelect({ courses }: Props) {
   function filteredStudents() {
     let attendance = students.map(student => ( {studentId: student.id, status: 'A'} ));
     attendance.map((student, index) => {
+      // @ts-expect-error
       if (Array.from(selectedKeys).includes(student.studentId.toString())) {
         attendance[index].status = 'P';
       }
@@ -89,6 +90,7 @@ export default function AttendanceSelect({ courses }: Props) {
       body: JSON.stringify({
         date: date,
         attendance: filteredStudents(),
+        // @ts-expect-error
         courseId: selectedCourseId?.currentKey
       })
     })
@@ -133,6 +135,7 @@ export default function AttendanceSelect({ courses }: Props) {
           aria-label="Example table with dynamic content"
           selectionMode="multiple"
           selectedKeys={selectedKeys}
+          // @ts-expect-error
           onSelectionChange={setSelectedKeys}
         >
           <TableHeader columns={columns}>
